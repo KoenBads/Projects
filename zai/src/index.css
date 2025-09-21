@@ -1,0 +1,20 @@
+:root {
+  --color-bg: #0D1B1E;     /* Charcoal */
+  --color-primary: #0FA47A; /* Emerald */
+  --color-accent: #B8F2A0;  /* Lime */
+  --color-neutral: #60717A; /* Steel */
+  --color-white: #FFFFFF;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-white);
+}
+
+
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

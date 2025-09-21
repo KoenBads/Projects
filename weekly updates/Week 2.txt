@@ -1,0 +1,23 @@
+What I accomplished this week:
+
+-locked in my scope
+
+-Started creating the frontend in react
+
+-chose my backend and database structure
+
+-onboarding
+
+-navigation
+
+-csv import and round up simulator
+
+-created dashboard with live market data
+
+-Picked some colors for theme haven't gotten a logo yet
+
+
+
+next week
+
+-work more on backend 
