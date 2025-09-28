@@ -1,48 +1,41 @@
-// src/services/streaks.js
 export function calculateStreaks(roundups) {
   const today = new Date();
-  const weeklyTotals = {};
+  const weeklyTotalsMap = {};
 
-  // group roundups by week
-  roundups?.forEach(r => {
+  // Sum roundups by ISO week starting Monday
+  (roundups || []).forEach((r) => {
     const d = new Date(r.date);
-    const weekStart = new Date(d.setDate(d.getDate() - d.getDay() + 1));
-    const weekKey = weekStart.toISOString().slice(0, 10);
-    weeklyTotals[weekKey] = (weeklyTotals[weekKey] || 0) + r.amount;
+    if (isNaN(d)) return;
+    const monday = new Date(d);
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7)); // back to Monday
+    const key = monday.toISOString().slice(0, 10);
+    weeklyTotalsMap[key] =
+      (weeklyTotalsMap[key] || 0) + Number(r.amount || 0);
   });
 
-  // generate past 52 weeks
-  const weeks = [];
-  for (let i = 0; i < 52; i++) {
-    const weekStart = new Date(today);
-    weekStart.setDate(weekStart.getDate() - weekStart.getDay() + 1 - i * 7);
-    const key = weekStart.toISOString().slice(0, 10);
-    weeks.unshift({ week: key, invested: weeklyTotals[key] || 0 });
+  // Build last 52 weeks
+  const weeklyTotals = [];
+  for (let i = 51; i >= 0; i--) {
+    const monday = new Date(today);
+    monday.setDate(monday.getDate() - ((monday.getDay() + 6) % 7));
+    monday.setDate(monday.getDate() - i * 7);
+    const key = monday.toISOString().slice(0, 10);
+    weeklyTotals.push({ week: key, invested: weeklyTotalsMap[key] || 0 });
   }
 
-  // calculate streaks
-  let currentStreak = 0;
-  let longestStreak = 0;
-  let streakRunning = false;
-
-  weeks.forEach(w => {
+  // Calculate streaks
+  let currentStreak = 0,
+    longestStreak = 0,
+    run = 0;
+  weeklyTotals.forEach((w) => {
     if (w.invested >= 1) {
-      if (streakRunning) {
-        currentStreak++;
-      } else {
-        streakRunning = true;
-        currentStreak = 1;
-      }
-      if (currentStreak > longestStreak) longestStreak = currentStreak;
+      run += 1;
+      currentStreak = run;
+      if (run > longestStreak) longestStreak = run;
     } else {
-      streakRunning = false;
-      currentStreak = 0;
+      run = 0;
     }
   });
 
-  return {
-    currentStreak,
-    longestStreak,
-    weeklyTotals: weeks,
-  };
+  return { currentStreak, longestStreak, weeklyTotals };
 }

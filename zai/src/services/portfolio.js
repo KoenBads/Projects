@@ -8,13 +8,16 @@ export function simulatePortfolio(roundups, prices, latestPrice) {
     return { shares: 0, totalInvested: 0, currentValue: 0, history: [] };
   }
 
-  const sortedPrices = [...prices].sort((a, b) => new Date(a.date) - new Date(b.date));
+  // Ensure prices sorted oldest → newest
+  const sortedPrices = [...prices].sort(
+    (a, b) => new Date(a.date) - new Date(b.date)
+  );
 
   for (let r of roundups) {
     const rDate = new Date(r.date);
 
     // find closest price on/before roundup date
-    const priceEntry = [...sortedPrices].reverse().find(p => {
+    const priceEntry = [...sortedPrices].reverse().find((p) => {
       if (!p.date || !p.close) {
         console.warn("Bad price entry:", p);
         return false;
@@ -40,13 +43,11 @@ export function simulatePortfolio(roundups, prices, latestPrice) {
       totalShares: shares,
       totalInvested,
       valueNow: shares * latestPrice,
-      gainLoss: (shares * latestPrice) - totalInvested,
+      gainLoss: shares * latestPrice - totalInvested,
     });
   }
 
   const currentValue = shares * latestPrice;
-
-  console.log("Simulation complete. History:", history);
 
   return { shares, totalInvested, currentValue, history };
 }

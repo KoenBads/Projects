@@ -3,6 +3,8 @@ import Onboarding from "./pages/Onboarding";
 import Dashboard from "./pages/Dashboard";
 import ImportCSV from "./pages/ImportCSV"; 
 import Portfolio from "./pages/Portfolio";
+import FirebaseTest from "./pages/FirebaseTest";
+
 
 export default function App() {
   return (
@@ -13,6 +15,7 @@ export default function App() {
       <Route path="/import" element={<ImportCSV />} /> {}
       <Route path="*" element={<Navigate to="/onboarding" replace />} />
       <Route path="/portfolio" element={<Portfolio />} />
+      <Route path="/firebase-test" element={<FirebaseTest />} />
     </Routes>
   );
 }
